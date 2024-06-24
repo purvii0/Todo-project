@@ -2,6 +2,7 @@ import { useState } from "react";
 import TodoInput from "./TodoInputFile";
 import TodoItem from "./TodoItem";
 import { nanoid } from "nanoid";
+import "./TodoFile.css";
 
 function Todo() {
   const [todosList, setTodosList] = useState([]);
