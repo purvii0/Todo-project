@@ -4,9 +4,23 @@ import TodoItem from "./TodoItem";
 import { nanoid } from "nanoid";
 import axios from "axios";
 import "./Todo.css";
+import { useEffect } from "react";
 
 function Todo() {
   const [todosList, setTodosList] = useState([]);
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    console.log("Mounted");
+    axios
+      .get(`http://localhost:8000/todos?_page=${page}&_per_page=3`)
+      .then(function (response) {
+        setTodosList(response.data.data);
+      });
+    return () => {
+      console.log("Unmounted");
+    };
+  }, [page]);
 
   function addTodos(todos) {
     axios
@@ -65,7 +79,7 @@ function Todo() {
       <TodoInput getData={getData} />
       {todosList.map((e) => {
         return (
-          <div className="todo-item">
+          <div className="todo-item" key={e.id}>
             <TodoItem
               item={e}
               handleToggle={handleToggle}
@@ -74,6 +88,20 @@ function Todo() {
           </div>
         );
       })}
+      <button
+        onClick={() => {
+          setPage(page - 1);
+        }}
+      >
+        Prev
+      </button>
+      <button
+        onClick={() => {
+          setPage(page + 1);
+        }}
+      >
+        Next
+      </button>
     </div>
   );
 }
